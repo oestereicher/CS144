@@ -8,6 +8,20 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var blogRouter = require('./routes/blog');
 
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+//connection url
+const url = 'mongodb://localhost:27017';
+//database name
+const dbName = 'BlogServer';
+//connect method to connect to the server
+MongoClient.connect(url, function (err, client) {
+	assert.equal(null, err);
+	console.log("Connected to server");
+	const db = client.db(dbName);
+	client.close();
+});
+
 var app = express();
 
 // view engine setup
