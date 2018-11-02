@@ -22,24 +22,25 @@ router.get('/:username', (req, res) => {
             if (err) throw err;
             console.log(result);
             posts = result;
+            let renderObj = new Object();
+            renderObj.title = "Posts";
+            renderObj.postTitles = new Array();
+            renderObj.posts = new Array();
+            let firstPost = 0;
+            if (req.query.start) {
+                while (firstPost < posts.length && posts[firstPost].postid < req.query.start) {
+                    firstPost++;
+                }
+            }
+            for (let i = firstPost; i < firstPost + 5 && i < posts.length; i++) {
+                renderObj.postTitles.push(posts[i].title);
+                renderObj.posts.push(posts[i].body);
+            }
+            res.render('blog', renderObj);
             client.close();
         });
     });
-	let renderObj = new Object();
-	renderObj.title = "Posts";
-	renderObj.postTitles = new Array();
-	renderObj.posts = new Array();
-    let firstPost = 0;
-    if (req.query.start) {
-        while (firstPost < posts.length && posts[firstPost].postid < req.query.start) {
-            firstPost++;
-        }
-    }
-	for (let i = firstPost; i < firstPost + 5 && i < posts.length; i++) {
-		renderObj.postTitles.push(posts[i].title);
-		renderObj.posts.push(posts[i].body);
-	}
-	res.render('blog', renderObj);
+
 });
 
 /* I don't think this is necessary

@@ -44,26 +44,27 @@ router.post('/', (req, res, next) => {
                if (err) throw err;
                console.log(result);
                hashword = result;
+               if (hashword.length != 1) { //user not found
+                   next(createError(401));
+               }
+               else {
+                   bcrypt.compare(pass, hashword[0].password, function (err, res) {
+                       assert.equal(null, err);
+                       if (!res) { //password does not match database
+                           console.log("terrible horrible or just mistake");
+                           next(createError(401));
+                       }
+                       else {
+                           //good good, gotta check the redirect stuff
+                           console.log("yay, good password!!!1");
+                       }
+                   })
+               }
                client.close();
            });
        });
        console.log("terrible terrible" + hashword);
-       if (hashword.length != 1) { //user not found
-           next(createError(401));
-       }
-       else {
-           bcrypt.compare(pass, hashword[0].password, function (err, res) {
-               assert.equal(null, err);
-               if (!res) { //password does not match database
-                   console.log("terrible horrible or just mistake");
-                   next(createError(401));
-               }
-               else {
-                   //good good, gotta check the redirect stuff
-                   console.log("yay, good password!!!1");
-               }
-           })
-       }
+
        //res.render('login', {});
    }
 });
