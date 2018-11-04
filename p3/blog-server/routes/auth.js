@@ -92,7 +92,7 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
         let query = {'username': req.params.username};
         db.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
             if (err) return res.status(500).send("There was a problem finding the user.");
-            if (!result) return res.status(404).send("No user found.");
+            if (result.length < 1) return res.status(404).send("No user found.");
             let renderObj = new Object();
             renderObj.user = req.params.username;
             renderObj.posts = new Array();
@@ -105,6 +105,25 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
                 //res.render('blog', renderObj);
                 client.close();
             });
+        });
+    });
+});
+
+router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
+    MongoClient.connect(url, function(err, client) {
+        assert.equal(null, err);
+        console.log("Connected correctly to server in test.js");
+        let db = client.db(dbName);
+        let query = {'username': req.params.username, 'postid': parseInt(req.params.postid)};
+        db.collection("Posts").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
+            if (err) return res.status(500).send("There was a problem finding the user.");
+            if (result.length < 1) return res.status(404).send("No post found.");
+            let renderObj = new Object();
+            renderObj.user = req.params.username;
+            renderObj.posts = result;
+            console.log(renderObj);
+            res.status(200).render('api',renderObj);
+            client.close();
         });
     });
 });
