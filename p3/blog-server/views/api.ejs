@@ -5,11 +5,11 @@
 <% for (let i = 0; i < posts.length; i++) { %>
     <h1><%= posts[i].title %></h1>
     <p><%= posts[i].body %></p>
-    <form id="<%= posts[i].postid %>" method="DELETE">
+    <!-- <form id="<%= posts[i].postid %>" method="DELETE">
         <input type="hidden" name="username" value="<%= user %>">
         <input type="hidden" name="postid" value="<%= posts[i].postid %>">
         <button type="submit" value="delete">Delete</button>
-    </form>
+    </form> -->
 <% } %>
 </body>
 </html>

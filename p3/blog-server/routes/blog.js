@@ -79,6 +79,7 @@ router.get('/:username/:postid', (req, res) => {
             console.log(result);
             posts = result;
             let renderObj = new Object();
+            renderObj.morePosts = false;
             renderObj.title = "Posts";
             renderObj.postTitles = new Array();
             renderObj.posts = new Array();
