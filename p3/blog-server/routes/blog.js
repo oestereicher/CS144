@@ -26,7 +26,6 @@ router.get('/:username', (req, res) => {
         db.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
             if (err) throw err;
             console.log(result);
-            if(result.length == 0)
             posts = result;
             let renderObj = new Object();
             renderObj.title = "Posts";
