@@ -3,8 +3,11 @@
 <head><title>Posts</title></head>
 <body>
 	<% for (let i = 0; i < 5 && i < postTitles.length; i++) { %>
-		<h1><%= postTitles[i] %></h1>
-		<p><%= posts[i] %></p>
+		<h1><%- postTitles[i] %></h1>
+		<p><%- posts[i] %></p>
+	<% } %>
+	<% if (morePosts) { %>
+		<a href="/blog/<%= username %>?start=<%= nextPostId %>" id="next">Next</a>
 	<% } %>
 </body>
 </html>
