@@ -20,7 +20,11 @@ app.set('views', '.');
 app.use(cookieParser());
 
 router.get('/login', (req, res) => {
-    res.render('login', {});
+    let redirect = "";
+    if (req.query.redirect) {
+        redirect = req.query.redirect;
+    }
+    res.render('login', {'redirect': redirect});
 });
 
 
@@ -31,6 +35,7 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res, next) => {
     let user = req.body.username;
     let pass = req.body.password;
+    let redirect = req.body.redirect;
     //checking to make sure that a username and password were entered
     //unsure if this is correct
    if (!user || !pass) {
@@ -70,7 +75,12 @@ router.post('/login', (req, res, next) => {
                        }
                        res.cookie('jwt', token);
                        console.log(token);
-                       res.status(200).send({ auth: true, token: token });
+                       if (redirect) {
+                           return res.redirect(redirect);
+                       }
+                       else {
+                           res.status(200).send({ auth: true, token: token });
+                       }
                    })
                }
                client.close();
