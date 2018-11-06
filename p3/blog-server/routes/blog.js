@@ -40,13 +40,8 @@ router.get('/:username', (req, res) => {
                 }
             }
             for (let i = firstPost; i < firstPost + 5 && i < posts.length; i++) {
-                parsed = reader.parse(posts[i].title);
-                parsedString = writer.render(parsed);
-                renderObj.postTitles.push(parsedString);
-
-                parsed = reader.parse(posts[i].body);
-                parsedString = writer.render(parsed);
-                renderObj.posts.push(parsedString);
+                renderObj.postTitles.push(writer.render(reader.parse(posts[i].title)));
+                renderObj.posts.push(writer.render(reader.parse(posts[i].body)));
             }
             if (firstPost < posts.length - 5) { //means there are more posts past what is displayed
                 renderObj.nextPostId = posts[firstPost + 5].postid;
@@ -81,11 +76,9 @@ router.get('/:username/:postid', (req, res) => {
             let renderObj = new Object();
             renderObj.morePosts = false;
             renderObj.title = "Posts";
-            renderObj.postTitles = new Array();
-            renderObj.posts = new Array();
 
-            renderObj.postTitles.push(posts[0].title);
-            renderObj.posts.push(posts[0].body);
+            renderObj.postTitles = [(writer.render(reader.parse(posts[0].title))) ];
+            renderObj.posts = [(writer.render(reader.parse(posts[0].body)))];
 
             res.render('blog', renderObj);
             client.close();
