@@ -7,8 +7,6 @@ var logger = require('morgan');
 var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var blogRouter = require('./routes/blog');
-//var loginRouter = require('./routes/login');
-//var testRouter = require('./routes/t');
 
 //don't know if this connection is necessary
 const MongoClient = require('mongodb').MongoClient;
@@ -40,8 +38,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/blog', blogRouter);
-//app.use('/login', loginRouter);
-//app.use('/test', testRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

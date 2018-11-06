@@ -25,7 +25,6 @@ router.get('/:username', (req, res) => {
         let query = {'username': req.params.username};
         db.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
             if (err) throw err;
-            console.log(result);
             posts = result;
             let renderObj = new Object();
             renderObj.title = "Posts";
@@ -61,8 +60,6 @@ router.get('/:username', (req, res) => {
 
 
 router.get('/:username/:postid', (req, res) => {
-	console.log(req.params.username);
-	console.log(req.query.start);
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
         console.log("Connected correctly to server in blog.js");
@@ -71,12 +68,8 @@ router.get('/:username/:postid', (req, res) => {
         let query = {'username': req.params.username, 'postid':parseInt(req.params.postid)};
         console.log("after query");
         db.collection("Posts").find(query).toArray(function(err, result) {
-            console.log("reached pre-error");
             if(result.length == 0)
                 res.status(404).send("Post not found");
-            //if (err) throw err;
-            console.log("after the error thing");
-            console.log(result);
             posts = result;
             let renderObj = new Object();
             renderObj.morePosts = false;

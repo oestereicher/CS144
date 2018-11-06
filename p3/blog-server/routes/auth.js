@@ -94,10 +94,8 @@ router.post('/login', (req, res, next) => {
 
 //testy testy test test test testststststs
 router.get('/api/:username', verifyToken, function(req, res, next) {
-    console.log("in the test");
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
-        console.log("Connected correctly to server in test.js");
         let db = client.db(dbName);
         let query = {'username': req.params.username};
         db.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
@@ -122,7 +120,6 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
 router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
-        console.log("Connected correctly to server in test.js");
         let db = client.db(dbName);
         let query = {'username': req.params.username, 'postid': parseInt(req.params.postid)};
         db.collection("Posts").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
@@ -142,9 +139,6 @@ router.delete('/api/:username/:postid', verifyToken, function(req, res, next) {
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
         let db = client.db(dbName);
-        console.log("info i want");
-        console.log(req.params.username);
-        console.log(req.params.postid);
         let postid = parseInt(req.params.postid); //technically this will allow things like 34xxyy... fix this
         let query = {'username': req.params.username, 'postid': postid};
         db.collection("Posts").deleteOne(query, function (err, obj) {
@@ -152,9 +146,7 @@ router.delete('/api/:username/:postid', verifyToken, function(req, res, next) {
             if (obj.result.n == 0) {
                 return res.status(400).send("pretty sure this means the post wasnt there");
             }
-            console.log("guuuud delete");
             res.status(204).send("hmmmmmmm i think it deleted");
-            console.log(obj.result);
             client.close();
         });
     });
@@ -167,7 +159,6 @@ router.post('/api/:username/:postid', verifyToken, function(req, res, next) {
         let postid = parseInt(req.params.postid); //technically this will allow things like 34xxyy... fix this
         let query = {'username': req.params.username, 'postid': postid};
         db.collection("Posts").find(query).toArray(function (err, result) {
-            console.log(result);
             if (err) return res.status(400).send("idk what this issue is");
             if (result.length != 0) {
                 return res.status(400).send("already exists")
@@ -196,7 +187,6 @@ router.put('/api/:username/:postid', verifyToken, function (req, res, next) {
         let postid = parseInt(req.params.postid); //technically this will allow things like 34xxyy... fix this
         let query = {'username': req.params.username, 'postid': postid};
         db.collection("Posts").find(query).toArray(function (err, result) {
-            console.log(result);
             if (err) return res.status(400).send("error???");
             if (result.length == 0) {
                 return res.status(400).send("ain't there yet horrible")
@@ -207,7 +197,6 @@ router.put('/api/:username/:postid', verifyToken, function (req, res, next) {
                 }
                 //query.title = req.body.title;
                 update = {$set: {'title': req.body.title, 'body': req.body.body}};
-                console.log(req.body);
                 db.collection("Posts").updateOne(query, update, function (err, obj) {
                     if (err) return res.status(400).send("not sure if correct error");
                     res.status(200).send("updated suchhhh a gooooooood thing");
