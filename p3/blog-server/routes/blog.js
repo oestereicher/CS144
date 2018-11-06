@@ -8,8 +8,6 @@ let dbName = 'BlogServer';
 let commonmark = require('commonmark');
 var reader = new commonmark.Parser();
 var writer = new commonmark.HtmlRenderer();
-var parsed;
-var parsedString;
 
 let posts;
 
@@ -23,32 +21,36 @@ router.get('/:username', (req, res) => {
         console.log("Connected correctly to server in blog.js");
         let db = client.db(dbName);
         let query = {'username': req.params.username};
-        db.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
-            if (err) throw err;
-            console.log(result);
-            posts = result;
-            let renderObj = new Object();
-            renderObj.title = "Posts";
-            renderObj.postTitles = new Array();
-            renderObj.posts = new Array();
-            renderObj.username = req.params.username;
-            renderObj.morePosts = false;
-            let firstPost = 0;
-            if (req.query.start) {
-                while (firstPost < posts.length && posts[firstPost].postid < req.query.start) {
-                    firstPost++;
+        db.collection("Users").find(query).toArray(function (error, resultt){
+            if (error) return res.status(500).send("There was a problem finding the user.");
+            if (resultt.length < 1) return res.status(404).send("No user found.");
+            db.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
+                if (err) throw err;
+                console.log(result);
+                posts = result;
+                let renderObj = new Object();
+                renderObj.title = "Posts";
+                renderObj.postTitles = new Array();
+                renderObj.posts = new Array();
+                renderObj.username = req.params.username;
+                renderObj.morePosts = false;
+                let firstPost = 0;
+                if (req.query.start) {
+                    while (firstPost < posts.length && posts[firstPost].postid < req.query.start) {
+                        firstPost++;
+                    }
                 }
-            }
-            for (let i = firstPost; i < firstPost + 5 && i < posts.length; i++) {
-                renderObj.postTitles.push(writer.render(reader.parse(posts[i].title)));
-                renderObj.posts.push(writer.render(reader.parse(posts[i].body)));
-            }
-            if (firstPost < posts.length - 5) { //means there are more posts past what is displayed
-                renderObj.nextPostId = posts[firstPost + 5].postid;
-                renderObj.morePosts = true;
-            }
-            res.render('blog', renderObj);
-            client.close();
+                for (let i = firstPost; i < firstPost + 5 && i < posts.length; i++) {
+                    renderObj.postTitles.push(writer.render(reader.parse(posts[i].title)));
+                    renderObj.posts.push(writer.render(reader.parse(posts[i].body)));
+                }
+                if (firstPost < posts.length - 5) { //means there are more posts past what is displayed
+                    renderObj.nextPostId = posts[firstPost + 5].postid;
+                    renderObj.morePosts = true;
+                }
+                res.render('blog', renderObj);
+                client.close();
+            });
         });
     });
 
