@@ -101,7 +101,7 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
         let db = client.db(dbName);
         let query = {'username': req.params.username};
         db.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
-            if (err) return res.status(500).send("There was a problem finding the user.");
+            if (err) return res.status(404).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No user found.");
             let renderObj = new Object();
             renderObj.user = req.params.username;
