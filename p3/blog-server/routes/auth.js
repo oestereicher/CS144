@@ -21,9 +21,10 @@ app.use(cookieParser());
 
 router.get('/login', (req, res) => {
     let redirect = "";
-    if (req.query.redirect) {
-        redirect = req.query.redirect;
+    if (req.body.redirect) {
+        redirect = req.body.redirect;
     }
+    console.log(redirect)
     res.render('login', {'redirect': redirect});
 });
 
@@ -36,6 +37,7 @@ router.post('/login', (req, res, next) => {
     let user = req.body.username;
     let pass = req.body.password;
     let redirect = req.body.redirect;
+    console.log(user, pass, redirect)
     //checking to make sure that a username and password were entered
     //unsure if this is correct
    if (!user || !pass) {
