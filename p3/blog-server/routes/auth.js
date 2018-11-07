@@ -21,10 +21,10 @@ app.use(cookieParser());
 
 router.get('/login', (req, res) => {
     let redirect = "";
-    if (req.body.redirect) {
-        redirect = req.body.redirect;
+    if (req.query.redirect) {
+        redirect = req.query.redirect;
     }
-    console.log(redirect)
+    console.log(redirect);
     res.render('login', {'redirect': redirect});
 });
 
