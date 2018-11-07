@@ -136,7 +136,7 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
         db.collection("Posts").findOne(query, {projection: {_id: 0, password: 0}},function (err, result) {
             if (err) return res.status(404).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No post found.");
-            let renderObj = new Object();
+            let renderObj = new Object(); //I dont know if this renderObj ends up being used
             renderObj.user = req.params.username;
             renderObj.posts = result[0];
             console.log(renderObj);
