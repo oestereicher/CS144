@@ -1,4 +1,7 @@
 use BlogServer
+db.dropDatabase()
+use BlogServer
+
 db.createCollection("Posts")
 db.createCollection("Users")
 db.Posts.save({ "postid": 1, "username": "cs144", "created": 1518669344517, "modified": 1518669344517, "title": "Title 1", "body": "Hello, world!" })

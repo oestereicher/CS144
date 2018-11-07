@@ -182,6 +182,8 @@ router.post('/api/:username/:postid', verifyToken, function(req, res, next) {
                 }
                 query.title = req.body.title;
                 query.body = req.body.body;
+                query.created = Math.floor(Date.now());
+                query.modified = query.created;
                 console.log(req.body);
                 db.collection("Posts").insertOne(query, function (err, obj) {
                    if (err) return res.status(400).send("not sure if correct error");
@@ -210,7 +212,7 @@ router.put('/api/:username/:postid', verifyToken, function (req, res, next) {
                     return res.status(400).send("bro why no title/body");
                 }
                 //query.title = req.body.title;
-                update = {$set: {'title': req.body.title, 'body': req.body.body}};
+                update = {$set: {'title': req.body.title, 'body': req.body.body, 'modified': Math.floor(Date.now())}};
                 console.log(req.body);
                 db.collection("Posts").updateOne(query, update, function (err, obj) {
                     if (err) return res.status(400).send("not sure if correct error");
