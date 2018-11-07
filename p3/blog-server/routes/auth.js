@@ -79,7 +79,8 @@ router.post('/login', (req, res, next) => {
                            return res.redirect(redirect);
                        }
                        else {
-                           res.status(200).send({ auth: true, token: token });
+                           res.status(200).render('success', {});
+                           
                        }
                    })
                }
@@ -111,7 +112,8 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
                 if (resultt) {
                     renderObj.posts = resultt;
                 }
-                res.status(200).render('api', renderObj);
+                //res.status(200).render('api', renderObj);
+                res.status(200).json(resultt);
                 //res.render('blog', renderObj);
                 client.close();
             });
@@ -132,7 +134,7 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
             renderObj.user = req.params.username;
             renderObj.posts = result;
             console.log(renderObj);
-            res.status(200).render('api',renderObj);
+            res.status(200).json(result);
             client.close();
         });
     });
