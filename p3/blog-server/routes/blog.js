@@ -22,7 +22,7 @@ router.get('/:username', (req, res) => {
         let db = client.db(dbName);
         let query = {'username': req.params.username};
         db.collection("Users").find(query).toArray(function (error, resultt){
-            if (error) return res.status(500).send("There was a problem finding the user.");
+            if (error) return res.status(404).send("There was a problem finding the user.");
             if (resultt.length < 1) return res.status(404).send("No user found.");
             db.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
                 if (err) throw err;

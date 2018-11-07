@@ -41,7 +41,7 @@ router.post('/login', (req, res, next) => {
     //checking to make sure that a username and password were entered
     //unsure if this is correct
    if (!user || !pass) {
-       return res.status(401).send({ auth: false, token: null });
+       return res.status(401).render('login', {redirect:redirect});
        //res.render('login', {});
    }
    else {
@@ -58,14 +58,14 @@ router.post('/login', (req, res, next) => {
                console.log(result);
                hashword = result;
                if (hashword.length != 1) { //user not found
-                   next(createError(401));
+                   res.status(401).render('login', {redirect:redirect});
                }
                else {
                    bcrypt.compare(pass, hashword[0].password, function (err, response) {
                        assert.equal(null, err);
                        if (!response) { //password does not match database
                            console.log("terrible horrible or just mistake");
-                           return res.status(401).send({ auth: false, token: null });
+                           return res.status(401).render('login', {redirect:redirect});
                        }
                        else {
                            //good good, gotta check the redirect stuff
@@ -78,7 +78,7 @@ router.post('/login', (req, res, next) => {
                        res.cookie('jwt', token);
                        console.log(token);
                        if (redirect) {
-                           return res.redirect(redirect);
+                           return res.status(200).redirect(redirect);
                        }
                        else {
                            res.status(200).render('success', {});
@@ -110,12 +110,16 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
             renderObj.user = req.params.username;
             renderObj.posts = new Array();
             db.collection("Posts").find(query).toArray(function (error, resultt) {
-                if (error) return res.status(500).send("not sure what this means");
+                if (error) return res.status(404).send("problem finding the posts");
                 if (resultt) {
                     renderObj.posts = resultt;
                 }
+                let jsonObj = new Object();
+                jsonObj.user = req.params.username;
+                jsonObj.posts = new Array();
+                jsonObj.posts=resultt;
                 //res.status(200).render('api', renderObj);
-                res.status(200).json(resultt);
+                res.status(200).json(jsonObj);
                 //res.render('blog', renderObj);
                 client.close();
             });
@@ -129,12 +133,12 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
         console.log("Connected correctly to server in test.js");
         let db = client.db(dbName);
         let query = {'username': req.params.username, 'postid': parseInt(req.params.postid)};
-        db.collection("Posts").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
-            if (err) return res.status(500).send("There was a problem finding the user.");
+        db.collection("Posts").findOne(query, {projection: {_id: 0, password: 0}},function (err, result) {
+            if (err) return res.status(404).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No post found.");
             let renderObj = new Object();
             renderObj.user = req.params.username;
-            renderObj.posts = result;
+            renderObj.posts = result[0];
             console.log(renderObj);
             res.status(200).json(result);
             client.close();
