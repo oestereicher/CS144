@@ -81,7 +81,8 @@ router.post('/login', (req, res, next) => {
                            return res.redirect(redirect);
                        }
                        else {
-                           res.status(200).send({ auth: true, token: token });
+                           res.status(200).render('success', {});
+                           
                        }
                    })
                }
@@ -103,7 +104,7 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
         let db = client.db(dbName);
         let query = {'username': req.params.username};
         db.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
-            if (err) return res.status(500).send("There was a problem finding the user.");
+            if (err) return res.status(404).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No user found.");
             let renderObj = new Object();
             renderObj.user = req.params.username;
@@ -113,7 +114,8 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
                 if (resultt) {
                     renderObj.posts = resultt;
                 }
-                res.status(200).render('api', renderObj);
+                //res.status(200).render('api', renderObj);
+                res.status(200).json(resultt);
                 //res.render('blog', renderObj);
                 client.close();
             });
@@ -134,7 +136,7 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
             renderObj.user = req.params.username;
             renderObj.posts = result;
             console.log(renderObj);
-            res.status(200).render('api',renderObj);
+            res.status(200).json(result);
             client.close();
         });
     });
