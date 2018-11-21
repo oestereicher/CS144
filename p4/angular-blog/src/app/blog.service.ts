@@ -29,6 +29,7 @@ export class BlogService {
           classThis.posts.push(post);
           postnum++;
         }
+        classThis.nextID = Math.max.apply(Math, classThis.posts.map(function(post) { return post.postid })) + 1;
       }
     };
 
@@ -65,8 +66,8 @@ export class BlogService {
         window.location.href = "http://localhost:3000/edit/";
       }
     };
-    //TODO: pick a postid to create new post with
-    let postid = 69;
+    this.nextID++;
+    let postid = this.nextID;
     httpReq.open("POST", this.api + username + "/" + postid.toString());
     httpReq.setRequestHeader("Content-type", "application/json");
     httpReq.send(JSON.stringify(newPost));
@@ -115,7 +116,7 @@ export class BlogService {
     }
   }
 
-
+  //extra functions
   postToIndex(id: number): number {
     for (let i = 0; i < this.posts.length; i++) {
       if (this.posts[i].postid == id) {
@@ -124,7 +125,6 @@ export class BlogService {
     }
     return -1;
   }
-
 
 }
 
