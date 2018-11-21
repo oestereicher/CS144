@@ -64,7 +64,13 @@ export class BlogService {
         window.alert("error creating new post rip lmao");
         window.location.href = "http://localhost:3000/edit/";
       }
-    }
+    };
+    //TODO: pick a postid to create new post with
+    let postid = 69;
+    httpReq.open("POST", this.api + username + "/" + postid.toString());
+    httpReq.setRequestHeader("Content-type", "application/json");
+    httpReq.send(JSON.stringify(newPost));
+    return newPost;
   }
 
   updatePost(username: string, post: Post): void {
