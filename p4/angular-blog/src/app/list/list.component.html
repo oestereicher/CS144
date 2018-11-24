@@ -1,3 +1,13 @@
-<p>
-  list works!
-</p>
+<div id = "list-container">
+  <div id = "posts-container">
+    <h3 id = "list-title">My Posts</h3>
+  </div>
+  <div id = "post-container">
+    <ul class = "list">
+      <li *ngFor="let post of posts">
+        <span class="badge">{{post.postid}}</span> {{post.title}} Body: {{post.body}}
+      </li>
+    </ul>
+  </div>
+</div>
+<!--id = "post-list"-->
