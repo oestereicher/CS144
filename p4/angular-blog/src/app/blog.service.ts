@@ -90,7 +90,9 @@ export class BlogService {
           window.location.href = "http://localhost:3000/edit/" + post.postid;
         }
       }
-
+      httpReq.open("PUT", this.api + username + "/" + post.postid.toString());
+      httpReq.setRequestHeader("Content-type", "application/json");
+      httpReq.send(JSON.stringify(this.posts[index]));
     }
   }
 
