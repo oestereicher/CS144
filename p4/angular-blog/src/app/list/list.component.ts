@@ -13,7 +13,7 @@ export class ListComponent implements OnInit {
   username: string;
 
   ngOnInit() {
-    this.posts = this.blogService.getPosts(this.username);
+    this.posts = this.blogService.getPosts(this.blogService.auth_username);
     console.log("INSIDE LIST COMPOMENT PRINTING");
     console.log(this.posts);
   }

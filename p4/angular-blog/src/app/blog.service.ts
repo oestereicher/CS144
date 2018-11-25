@@ -7,40 +7,50 @@ import { Injectable } from '@angular/core';
 })
 export class BlogService {
   private posts: Post[] = [];
+  public auth_username: string;
   private nextID: number;
   private api: string = "http://localhost:3000/api/";
 
-  constructor() { }
+  constructor() {
+    this.parseJWT(document.cookie);
+    this.fetchPosts(this.auth_username);
+    console.log(this.auth_username);
+   }
 
   fetchPosts(username: string): void {
     let httpReq = new XMLHttpRequest();
     let classThis = this;
     httpReq.onreadystatechange = function() {
       if (httpReq.readyState == XMLHttpRequest.DONE) {
+        console.log("REACHED");
         let res = JSON.parse(httpReq.responseText);
+        console.log(res);
         let postnum = 0;
-        while (postnum < res.length) {
+        while (postnum < res.posts.length) {
           let post = {
-            postid: res[postnum].postid,
-            created: new Date(res[postnum].created),
-            modified: new Date(res[postnum].modified),
-            title: res[postnum].title,
-            body: res[postnum].body
+            postid: res.posts[postnum].postid,
+            created: new Date(res.posts[postnum].created),
+            modified: new Date(res.posts[postnum].modified),
+            title: res.posts[postnum].title,
+            body: res.posts[postnum].body
           };
           classThis.posts.push(post);
+          console.log(post);
+          console.log("PLEASEEEE");
           postnum++;
         }
+        classThis.nextID = Math.max.apply(Math, classThis.posts.map(function(post) { return post.postid })) + 1;
       }
+      console.log(classThis.posts);
+      console.log("HERE ARE POSTS BITHCEs");
     };
 
     httpReq.open('GET', this.api + username, true);
+    httpReq.withCredentials = true;
     httpReq.send();
   }
 
   getPosts(username: string): Post[] {
-    //console.log("I PRINTED FAKEPOSTS");
-    //console.log(FAKEPOSTS);
-    //return FAKEPOSTS;
     return this.posts;
   }
 
@@ -69,8 +79,8 @@ export class BlogService {
         window.location.href = "http://localhost:3000/edit/";
       }
     };
-    //TODO: pick a postid to create new post with
-    let postid = 69;
+    this.nextID++;
+    let postid = this.nextID;
     httpReq.open("POST", this.api + username + "/" + postid.toString());
     httpReq.setRequestHeader("Content-type", "application/json");
     httpReq.send(JSON.stringify(newPost));
@@ -93,7 +103,9 @@ export class BlogService {
           window.location.href = "http://localhost:3000/edit/" + post.postid;
         }
       }
-
+      httpReq.open("PUT", this.api + username + "/" + post.postid.toString());
+      httpReq.setRequestHeader("Content-type", "application/json");
+      httpReq.send(JSON.stringify(this.posts[index]));
     }
   }
 
@@ -119,7 +131,7 @@ export class BlogService {
     }
   }
 
-
+  //extra functions
   postToIndex(id: number): number {
     for (let i = 0; i < this.posts.length; i++) {
       if (this.posts[i].postid == id) {
@@ -129,8 +141,15 @@ export class BlogService {
     return -1;
   }
 
-
+  parseJWT(token: string): void{
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let decoded = JSON.parse(atob(base64));
+    this.auth_username = decoded.usr;
+  }
 }
+
+
 
 export class Post {
   postid: number;
