@@ -39,7 +39,10 @@ export class BlogService {
           console.log("PLEASEEEE");
           postnum++;
         }
-        classThis.nextID = Math.max.apply(Math, classThis.posts.map(function(post) { return post.postid })) + 1;
+        //classThis.nextID = Math.max.apply(Math, classThis.posts.map(function(post) { return post.postid })) + 1;
+        classThis.nextID = classThis.posts.length? Math.max.apply(Math, classThis.posts.map(function(post) { return post.postid })) + 1: 0;
+        console.log(classThis.nextID);
+        console.log("YAS OMG FINALLY");
       }
       console.log(classThis.posts);
       console.log("HERE ARE POSTS BITHCEs");
@@ -79,10 +82,13 @@ export class BlogService {
         window.location.href = "http://localhost:3000/edit/";
       }
     };
-    this.nextID++;
+    
     let postid = this.nextID;
-    httpReq.open("POST", this.api + username + "/" + postid.toString());
+    httpReq.open("POST", this.api + username + "/" + postid.toString(), true);
+    this.nextID++;
     httpReq.setRequestHeader("Content-type", "application/json");
+    console.log("THE NEW POST LOOKS LIKE THIS", JSON.stringify(newPost));
+    console.log(newPost);
     httpReq.send(JSON.stringify(newPost));
     return newPost;
   }
@@ -122,10 +128,12 @@ export class BlogService {
           window.location.href = "http://localhost:3000/";
         }
       };
-
+      
       this.posts = this.posts.filter(function(post) {
         return post.postid !== postid;
       });
+      //this.posts.splice(index, 1);
+      console.log(this.posts);
       httpReq.open('DELETE', this.api + username + "/" + postid.toString(), true);
       httpReq.send();
     }

@@ -1,11 +1,14 @@
 <div id = "list-container">
   <div id = "posts-container">
     <h3 id = "list-title">My Posts</h3>
+    <button type="button" class="btn button-style" id="newPostButton" (click)="newPost()">New Post</button>
   </div>
   <div id = "post-container">
     <ul class = "list">
-      <li *ngFor="let post of posts">
-        <span class="badge">{{post.postid}}</span> {{post.title}} Body: {{post.body}}
+      <li *ngFor="let post of posts" >
+          <a routerLink="/edit/{{post.postid}}">
+            <span class="badge">{{post.postid}}</span> {{post.title}} Body: {{post.body}}
+          </a>
       </li>
     </ul>
   </div>

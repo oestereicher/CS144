@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlogService, Post } from '../blog.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -8,19 +9,28 @@ import { BlogService, Post } from '../blog.service';
 })
 export class ListComponent implements OnInit {
 
-  constructor(private blogService: BlogService) { }
+  constructor(private blogService: BlogService,
+      private activatedRoute: ActivatedRoute,
+      private router: Router,
+    ) { }
   posts: Post[];
   username: string;
+  selectedPost: Post;
 
   ngOnInit() {
     this.posts = this.blogService.getPosts(this.blogService.auth_username);
-    console.log("INSIDE LIST COMPOMENT PRINTING");
-    console.log(this.posts);
+    console.log("init was called again in list component");
   }
 
   getPosts():void{
     this.posts = this.blogService.getPosts(this.username);
   }
+
+  newPost(): void {
+		let newPost = this.blogService.newPost(this.blogService.auth_username);
+		let newPostID = newPost.postid;
+		this.router.navigate(['/edit/' + newPostID.toString()]);
+	}
 
  parseJWT(token) :void{
    token = document.cookie; //WRONG
