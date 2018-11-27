@@ -1,0 +1,11 @@
+<div *ngIf="post">
+  <h2 id="edit-header">Edit Post</h2>
+    <h4 >Title: </h4>
+    <input [(ngModel)]="post.title" placeholder = "title">
+    <h4 >Body: </h4>
+    <textarea id="body" [(ngModel)]="post.body"></textarea>
+    <p> Last modified: {{post.modified | date: 'medium'}}</p>
+  <button type="button" class="btn button-style" id="deleteButton" (click)="delete()">Delete</button>
+  <button type="button" class="btn button-style" id="saveButton" (click)="save()">Save</button>
+  <button type="button" class="btn button-style" id="previewButton" (click)="preview()">Preview</button>
+</div>

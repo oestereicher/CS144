@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { EditComponent } from './edit/edit.component';
+import { PreviewComponent } from './preview/preview.component';
+import { ListComponent } from './list/list.component';
+
+const routes: Routes = [
+  { path: 'edit/:id', component: EditComponent },
+  { path: 'preview/:id', component: PreviewComponent},
+  //{ path: '', component:ListComponent}
+];
+
+@NgModule({
+  imports: [ RouterModule.forRoot(routes, {useHash: true}) ],
+  exports: [ RouterModule ]
+})
+export class AppRoutingModule { }
