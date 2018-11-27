@@ -1,8 +1,8 @@
 <div *ngIf="post">
   <h3 id="preview-header">Preview</h3>
-  <button type="submit" class="btn button-style" (click)="back()"> Edit</button>
+  <button type="submit" class="btn button-style" (click)="back()"><span id="open">Edit</span></button>
   <div id="preview-container">
-    <div id="title" [innerHTML]=title></div>
+    <h2><div id="title" [innerHTML]=title></div></h2>
     <div id="body" [innerHTML]=body></div>
   </div>
 </div>

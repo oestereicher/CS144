@@ -1,13 +1,15 @@
 <div id = "list-container">
   <div id = "posts-container">
     <h3 id = "list-title">My Posts</h3>
-    <button type="button" class="btn button-style" id="newPostButton" (click)="newPost()">New Post</button>
+    <button type="button" class="btn button-style" id="newPostButton" (click)="newPost()"><span id="open">New Post</span></button>
   </div>
   <div id = "post-container">
     <ul class = "list">
       <li *ngFor="let post of posts" >
           <a routerLink="/edit/{{post.postid}}">
-            <span class="badge">{{post.postid}}</span> {{post.title}} Body: {{post.body}}
+            <span class="badge">{{post.created.getMonth() + 1}}/{{post.created.getDate()}}/{{post.created.getFullYear()}},
+            {{post.created.getHours()}}:{{post.created.getMinutes()}}:{{post.created.getSeconds()}}</span>
+            {{post.title.length < 12 ? post.title : post.title.substring(0, 10) + "..."}}
           </a>
       </li>
     </ul>
