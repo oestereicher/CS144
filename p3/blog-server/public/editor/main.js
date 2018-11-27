@@ -74,7 +74,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "app-list {\n  float: left;\n}\n"
 
 /***/ }),
 
@@ -85,7 +85,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    Welcome to {{ title }}! WHOO yas \n  </h1>\n</div>\n<app-list></app-list>\n<router-outlet></router-outlet>\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    🎄Welcome to {{ title }}🎄\n  </h1>\n</div>\n<app-list></app-list>\n<router-outlet></router-outlet>\n\n"
 
 /***/ }),
 
@@ -403,7 +403,7 @@ var Post = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "#delete:after {\n  content: 'ⓧ';\n}\n#preview:after {\n  content:'👁';\n}\n#save:after {\n  content:'💾';\n}\n"
 
 /***/ }),
 
@@ -414,7 +414,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"post\">\n  <h2 id=\"edit-header\">Edit Post</h2>\n    <h4 >Title: </h4>\n    <input [(ngModel)]=\"post.title\" placeholder = \"title\">\n    <h4 >Body: </h4>\n    <textarea id=\"body\" [(ngModel)]=\"post.body\"></textarea>\n    <p> Last modified: {{post.modified | date: 'medium'}}</p>\n  <button type=\"button\" class=\"btn button-style\" id=\"deleteButton\" (click)=\"delete()\">Delete</button>\n  <button type=\"button\" class=\"btn button-style\" id=\"saveButton\" (click)=\"save()\">Save</button>\n  <button type=\"button\" class=\"btn button-style\" id=\"previewButton\" (click)=\"preview()\">Preview</button>\n</div>\n"
+module.exports = "<div *ngIf=\"post\">\n  <h2 id=\"edit-header\">Edit Post</h2>\n    <h4 >Title: </h4>\n    <input id=\"titleBox\" [(ngModel)]=\"post.title\" placeholder = \"title\">\n    <h4 >Body: </h4>\n    <textarea id=\"body\" [(ngModel)]=\"post.body\"></textarea>\n    <p> Last modified: {{post.modified | date: 'medium'}}</p>\n  <button type=\"button\" class=\"btn button-style\" id=\"deleteButton\" (click)=\"delete()\"><span id=\"delete\">Delete</span></button>\n  <button type=\"button\" class=\"btn button-style\" id=\"saveButton\" (click)=\"save()\"><span id=\"save\">Save</span></button>\n  <button type=\"button\" class=\"btn button-style\" id=\"previewButton\" (click)=\"preview()\"><span id=\"preview\">Preview</span></button>\n</div>\n"
 
 /***/ }),
 
@@ -528,7 +528,7 @@ var EditComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".list {\n    margin: 0 0 2em 0;\n    list-style-type: none;\n    padding: 0;\n    width: 15em;\n  }\n.list li {\n    cursor: pointer;\n    position: relative;\n    left: 0;\n    background-color: #EEE;\n    margin: .5em;\n    padding: .3em 0;\n    height: 1.6em;\n    border-radius: 4px;\n  }\n.list .text {\n    position: relative;\n    top: -3px;\n  }\n.list .badge {\n    display: inline-block;\n    font-size: small;\n    color: white;\n    padding: 0.8em 0.7em 0 0.7em;\n    background-color: #607D8B;\n    line-height: 1em;\n    position: relative;\n    left: -1px;\n    top: -4px;\n    height: 1.8em;\n    margin-right: .8em;\n    border-radius: 4px 0 0 4px;\n  }\n.list a {\n    color: #888;\n    text-decoration: none;\n    position: relative;\n    display: block;\n    width: 250px;\n  }\n.list a:hover {\n    color:#607D8B;\n  }\n.list li:hover {\n    color: #607D8B;\n    background-color: #DDD;\n    left: .1em;\n  }"
+module.exports = ".list {\n    margin: 0 0 2em 0;\n    list-style-type: none;\n    padding: 0;\n    width: 15em;\n  }\n.list li {\n    cursor: pointer;\n    position: relative;\n    left: 0;\n    background-color: #EEE;\n    margin: .5em;\n    padding: .3em 0;\n    height: 1.6em;\n    border-radius: 4px;\n  }\n.list .text {\n    position: relative;\n    top: -3px;\n  }\n.list .badge {\n    display: inline-block;\n    font-size: xx-small;\n    color: white;\n    padding: 0.8em 0.7em 0 0.7em;\n    background-color: #c12811;\n    line-height: 1em;\n    position: relative;\n    left: -1px;\n    top: -4px;\n    height: 1.8em;\n    margin-right: .8em;\n    border-radius: 4px 0 0 4px;\n  }\n.badge {\n    display: inline-block;\n    font-size: xx-small;\n  }\n.list a {\n    color: #888;\n    text-decoration: none;\n    position: relative;\n    display: block;\n    width: 250px;\n  }\n.list a:hover {\n    color:#c12811;\n  }\n.list li:hover {\n    color: #c12811;\n    background-color: #DDD;\n    left: .1em;\n  }\n"
 
 /***/ }),
 
@@ -539,7 +539,7 @@ module.exports = ".list {\n    margin: 0 0 2em 0;\n    list-style-type: none;\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id = \"list-container\">\n  <div id = \"posts-container\">\n    <h3 id = \"list-title\">My Posts</h3>\n    <button type=\"button\" class=\"btn button-style\" id=\"newPostButton\" (click)=\"newPost()\">New Post</button>\n  </div>\n  <div id = \"post-container\">\n    <ul class = \"list\">\n      <li *ngFor=\"let post of posts\" >\n          <a routerLink=\"/edit/{{post.postid}}\">\n            <span class=\"badge\">{{post.postid}}</span> {{post.title}} Body: {{post.body}}\n          </a>\n      </li>\n    </ul>\n  </div>\n</div>\n<!--id = \"post-list\"-->"
+module.exports = "<div id = \"list-container\">\n  <div id = \"posts-container\">\n    <h3 id = \"list-title\">My Posts</h3>\n    <button type=\"button\" class=\"btn button-style\" id=\"newPostButton\" (click)=\"newPost()\"><span id=\"open\">New Post</span></button>\n  </div>\n  <div id = \"post-container\">\n    <ul class = \"list\">\n      <li *ngFor=\"let post of posts\" >\n          <a routerLink=\"/edit/{{post.postid}}\">\n            <span class=\"badge\">{{post.created.getMonth() + 1}}/{{post.created.getDate()}}/{{post.created.getFullYear()}},\n            {{post.created.getHours()}}:{{post.created.getMinutes()}}:{{post.created.getSeconds()}}</span>\n            {{post.title.length < 12 ? post.title : post.title.substring(0, 10) + \"...\"}}\n          </a>\n      </li>\n    </ul>\n  </div>\n</div>\n<!--id = \"post-list\"-->\n"
 
 /***/ }),
 
@@ -621,7 +621,7 @@ var ListComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "#body {\n  color: white;\n  font-family: Verdana, Geneva, sans-serif;\n  font-size: 16pt;\n  padding: 5px .25em 5px;\n  resize: none;\n  background-color: rgba(135, 138, 142, 0.5);\n  border: 2px solid #c12811;\n\n  height: 15em;\n  width: 70%;\n  background-color: rgba(135, 138, 142, 0.5);\n  float: left;\n}\n#title {\n  -webkit-text-stroke: 1px grey;\n}\n"
 
 /***/ }),
 
@@ -632,7 +632,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"post\">\n  <h3 id=\"preview-header\">Preview</h3>\n  <button type=\"submit\" class=\"btn button-style\" (click)=\"back()\"> Edit</button>\n  <div id=\"preview-container\">\n    <div id=\"title\" [innerHTML]=title></div>\n    <div id=\"body\" [innerHTML]=body></div>\n  </div>\n</div>\n"
+module.exports = "<div *ngIf=\"post\">\n  <h3 id=\"preview-header\">Preview</h3>\n  <button type=\"submit\" class=\"btn button-style\" (click)=\"back()\"><span id=\"open\">Edit</span></button>\n  <div id=\"preview-container\">\n    <h2><div id=\"title\" [innerHTML]=title></div></h2>\n    <div id=\"body\" [innerHTML]=body></div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -767,7 +767,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/cs144/shared/gitrepos/CS144/p4/angular-blog/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/cs144/shared/cs144/p4/angular-blog/src/main.ts */"./src/main.ts");
 
 
 /***/ })

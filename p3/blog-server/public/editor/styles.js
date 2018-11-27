@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* You can add global styles to this file, and also import other style files */\n"
+module.exports = "/* You can add global styles to this file, and also import other style files */\nbody {\n  background-image: url(\"christmas_background.jpg\");\n  background-repeat: no-repeat;\n  background-attachment: fixed;\n  background-color: #cccccc;\n  color: white;\n  font-family: Verdana, Geneva, sans-serif;\n}\ninput[type=\"text\"], textarea, #titleBox {\n  color: white;\n  font-family: Verdana, Geneva, sans-serif;\n  font-size: 16pt;\n  padding: 5px .25em 5px;\n  resize: none;\n  background-color: rgba(135, 138, 142, 0.5);\n  border: 2px solid #c12811;\n}\ntextarea {\n  height: 15em;\n  width: 70%;\n  background-color: rgba(135, 138, 142, 0.5);\n  top: 0;\n  left: 0;\n}\n.footer {\n  font-size: 12pt;\n  text-align: right;\n}\nbutton {\n  display: inline-block;\n  border: 2px solid #c12811;\n  background-color: white;\n  color: black;\n  padding: 8px 8px;\n  text-align: center;\n  font-size: 16px;\n  margin: 4px 2px;\n  transition-duration: 0.4s;\n  cursor: pointer;\n  width: 150px;\n  border-radius: 12px;\n}\nbutton:hover {\n  background-color: #c12811;\n  color: white;\n}\nbutton span {\n  position: relative;\n  transition: 0.4s;\n}\nbutton span:after {\n  content: '+';\n  position: absolute;\n  opacity: 0;\n  top: 0;\n  right: -20px;\n  transition: 0.4s;\n}\nbutton:hover span {\n  padding-right: 25px;\n}\nbutton span:hover:after {\n  opacity: 1;\n  right: 0;\n}\n#open:after {\n  content: '✎';\n}\n"
 
 /***/ }),
 
@@ -539,7 +539,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/cs144/shared/gitrepos/CS144/p4/angular-blog/src/styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! /home/cs144/shared/cs144/p4/angular-blog/src/styles.css */"./src/styles.css");
 
 
 /***/ })
