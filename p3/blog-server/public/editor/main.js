@@ -276,9 +276,11 @@ var BlogService = /** @class */ (function () {
             title: " ",
             body: " "
         };
+        var classThis = this;
         this.posts.push(newPost);
         var httpReq = new XMLHttpRequest();
         httpReq.onreadystatechange = function () {
+            console.log("here is the new post in newPOst", newPost);
             if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 201) {
                 console.log("good job making new post woot");
             }
@@ -286,8 +288,9 @@ var BlogService = /** @class */ (function () {
                 if (httpReq.status == 401) {
                     window.location.href = "http://localhost:3000/login?redirect=/editor/";
                 }
+                classThis.posts.pop();
                 window.alert("error creating new post rip lmao");
-                window.location.href = "http://localhost:3000/edit/";
+                //window.location.href = "http://localhost:3000/edit/";
             }
         };
         var postid = this.nextID;
@@ -322,7 +325,7 @@ var BlogService = /** @class */ (function () {
                 else if (httpReq_1.readyState == XMLHttpRequest.DONE && httpReq_1.status != 0 && httpReq_1.status != 200) {
                     window.alert("error updating post");
                     console.log("dumb", httpReq_1.status);
-                    window.location.href = "http://localhost:3000/edit/" + post.postid;
+                    //window.location.href = "http://localhost:3000/edit/" + post.postid;
                     classThis.updateboo = true;
                 }
             };
@@ -450,6 +453,7 @@ var EditComponent = /** @class */ (function () {
         this.router = router;
         this.activatedRoute = activatedRoute;
         this.listComponent = listComponent;
+        //private oldPost: Post;
         this.editPost = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroup"]({
             title: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](),
             body: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"]() // post body input
@@ -457,11 +461,21 @@ var EditComponent = /** @class */ (function () {
     }
     EditComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.activatedRoute.params.subscribe(function () { return _this.getPost(); });
+        this.activatedRoute.params.subscribe(function () {
+            if (_this.post) {
+                //this.blogService.updatePost(this.blogService.auth_username, this.post);
+                _this.save();
+            }
+            _this.getPost();
+        });
     };
     EditComponent.prototype.getPost = function () {
         var postid = this.activatedRoute.snapshot.paramMap.get('id');
         this.post = this.blogService.getPost(this.blogService.auth_username, Number(postid));
+        if (this.post) {
+            this.oldBody = this.post.body;
+            this.oldTitle = this.post.title;
+        }
         console.log("get post in edit was called again");
     };
     EditComponent.prototype.delete = function () {
@@ -470,9 +484,17 @@ var EditComponent = /** @class */ (function () {
         //this.listComponent.ngOnInit();
     };
     EditComponent.prototype.save = function () {
-        this.blogService.updatePost(this.blogService.auth_username, this.post);
+        console.log("THIS OLD BODAY", this.oldBody);
+        console.log("THIs old title ", this.oldTitle);
+        console.log("this is the post", this.post);
+        if (this.oldBody != this.post.body || this.oldTitle != this.post.title) {
+            this.blogService.updatePost(this.blogService.auth_username, this.post);
+            this.oldBody = this.post.body;
+            this.oldTitle = this.post.title;
+        }
     };
     EditComponent.prototype.preview = function () {
+        this.save();
         this.router.navigateByUrl('/preview/' + this.post.postid);
     };
     __decorate([

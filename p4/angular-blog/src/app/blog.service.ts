@@ -81,9 +81,11 @@ export class BlogService {
       title: " ",
       body: " "
     };
+    let classThis = this;
     this.posts.push(newPost);
     let httpReq = new XMLHttpRequest();
     httpReq.onreadystatechange = function() {
+      console.log("here is the new post in newPOst", newPost);
       if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 201) {
         console.log("good job making new post woot");
       }
@@ -91,8 +93,9 @@ export class BlogService {
         if(httpReq.status == 401){
           window.location.href = "http://localhost:3000/login?redirect=/editor/";
         }
+        classThis.posts.pop();
         window.alert("error creating new post rip lmao");
-        window.location.href = "http://localhost:3000/edit/";
+        //window.location.href = "http://localhost:3000/edit/";
       }
     };
 
@@ -129,7 +132,7 @@ export class BlogService {
         else if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status != 0 && httpReq.status != 200) {
           window.alert("error updating post");
           console.log("dumb", httpReq.status);
-          window.location.href = "http://localhost:3000/edit/" + post.postid;
+          //window.location.href = "http://localhost:3000/edit/" + post.postid;
           classThis.updateboo = true;
         }
       }

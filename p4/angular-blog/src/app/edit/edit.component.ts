@@ -13,6 +13,9 @@ import { ListComponent } from '../list/list.component';
 export class EditComponent implements OnInit {
 
   private post: Post;
+  private oldTitle: string;
+  private oldBody: string;
+  //private oldPost: Post;
   private editPost = new FormGroup({
 		title: new FormControl(),  // post title input
 		body: new FormControl()  // post body input
@@ -27,12 +30,23 @@ export class EditComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(() => this.getPost());
+    this.activatedRoute.params.subscribe(() => {
+      if(this.post){
+        //this.blogService.updatePost(this.blogService.auth_username, this.post);
+        this.save();
+      }
+      this.getPost();
+    });
   }
 
   getPost(): void {
+    
 		let postid = this.activatedRoute.snapshot.paramMap.get('id');
     this.post = this.blogService.getPost(this.blogService.auth_username, Number(postid));
+    if(this.post){
+      this.oldBody = this.post.body;
+      this.oldTitle = this.post.title;
+    }
     console.log("get post in edit was called again");
   }
   
@@ -45,10 +59,18 @@ export class EditComponent implements OnInit {
   
   @HostListener('window:beforeunload')
   save(): void{
-    this.blogService.updatePost(this.blogService.auth_username, this.post);
+    console.log("THIS OLD BODAY", this.oldBody);
+    console.log("THIs old title ", this.oldTitle);
+    console.log("this is the post", this.post);
+    if (this.oldBody != this.post.body || this.oldTitle != this.post.title){
+      this.blogService.updatePost(this.blogService.auth_username, this.post);
+      this.oldBody = this.post.body;
+      this.oldTitle = this.post.title;
+    }
   }
 
   preview():void{
+    this.save();
     this.router.navigateByUrl('/preview/' + this.post.postid);
   }
 }

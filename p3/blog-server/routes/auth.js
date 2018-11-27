@@ -71,7 +71,7 @@ router.post('/login', (req, res, next) => {
                            //good good, gotta check the redirect stuff
                            console.log("yay, good password!!!1");
                            token = jwt.sign({
-                               "exp": Math.floor(Date.now() / 1000) + (10), //CHANGED
+                               "exp": Math.floor(Date.now() / 1000) + (45), //CHANGED
                                "usr": user
                            }, config.secret);
                        }
@@ -97,14 +97,14 @@ router.post('/login', (req, res, next) => {
 
 //testy testy test test test testststststs
 router.get('/api/:username', verifyToken, function(req, res, next) {
-    console.log("in the test");
+    //console.log("in the test");
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
         console.log("Connected correctly to server in test.js");
         let db = client.db(dbName);
         let query = {'username': req.params.username};
         db.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
-            if (err) return res.status(404).send("There was a problem finding the user.");
+            if (err) return res.status(400).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No user found.");
             let renderObj = new Object();
             renderObj.user = req.params.username;
@@ -138,9 +138,15 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
             if (result.length < 1) return res.status(404).send("No post found.");
             let renderObj = new Object(); //I dont know if this renderObj ends up being used
             renderObj.user = req.params.username;
-            renderObj.posts = result[0];
+            renderObj.posts = result;
             console.log(renderObj);
-            res.status(200).json(result);
+            if(result){
+              return res.status(200).json(result);
+            }
+            else 
+            {
+              return res.status(404).send("no such post");
+            }
             client.close();
         });
     });
@@ -177,7 +183,7 @@ router.post('/api/:username/:postid', verifyToken, function(req, res, next) {
         db.collection("Posts").find(query).toArray(function (err, result) {
             console.log(result);
             if (err) return res.status(400).send("idk what this issue is");
-            if (result.length != 0) {
+            if (result.length > 0) {
                 return res.status(400).send("already exists")
             }
             else {
