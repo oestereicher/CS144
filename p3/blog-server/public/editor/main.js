@@ -219,6 +219,7 @@ var BlogService = /** @class */ (function () {
         if (document.cookie != null && document.cookie.search("jwt") != -1) {
             this.parseJWT(document.cookie);
         }
+        this.updateboo = true;
         this.fetchPosts(this.auth_username);
         console.log(this.auth_username);
     }
@@ -299,7 +300,11 @@ var BlogService = /** @class */ (function () {
         return newPost;
     };
     BlogService.prototype.updatePost = function (username, post) {
+        if (!this.updateboo) {
+            return;
+        }
         var index = this.postToIndex(post.postid);
+        var classThis = this;
         if (index != -1) {
             this.posts[index].title = post.title;
             this.posts[index].body = post.body;
@@ -308,14 +313,17 @@ var BlogService = /** @class */ (function () {
             httpReq_1.onreadystatechange = function () {
                 if (httpReq_1.readyState == XMLHttpRequest.DONE && httpReq_1.status == 200) {
                     console.log("successful update wooo");
+                    classThis.updateboo = true;
                 }
                 else if (httpReq_1.readyState == XMLHttpRequest.DONE && httpReq_1.status == 401) {
                     window.location.href = "http://localhost:3000/login?redirect=/editor/";
+                    classThis.updateboo = false;
                 }
                 else if (httpReq_1.readyState == XMLHttpRequest.DONE && httpReq_1.status != 0 && httpReq_1.status != 200) {
                     window.alert("error updating post");
                     console.log("dumb", httpReq_1.status);
                     window.location.href = "http://localhost:3000/edit/" + post.postid;
+                    classThis.updateboo = true;
                 }
             };
             httpReq_1.open("PUT", this.api + username + "/" + post.postid.toString());

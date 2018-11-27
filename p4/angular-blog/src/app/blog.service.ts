@@ -18,9 +18,8 @@ export class BlogService {
       private activatedRoute: ActivatedRoute) {
       if(document.cookie != null && document.cookie.search("jwt")!= -1){
         this.parseJWT(document.cookie);
-      this.updateboo = true;
       }
-
+    this.updateboo = true;
     this.fetchPosts(this.auth_username);
     console.log(this.auth_username);
    }
