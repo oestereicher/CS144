@@ -71,7 +71,7 @@ router.post('/login', (req, res, next) => {
                            //good good, gotta check the redirect stuff
                            console.log("yay, good password!!!1");
                            token = jwt.sign({
-                               "exp": Math.floor(Date.now() / 1000) + (2 * 60 * 60),
+                               "exp": Math.floor(Date.now() / 1000) + (10), //CHANGED
                                "usr": user
                            }, config.secret);
                        }

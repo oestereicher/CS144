@@ -59,4 +59,18 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+app.use('/editor', function(req, res, next) {
+  var token = req.cookies.jwt;
+    if (!token) {
+        console.log("no token rip");
+        return res.redirect('http://localhost:3000/login?redirect=/editor');
+    }
+    jwt.verify(token, config.secret, function(err, decoded) {
+        if (err)
+            return res.redirect('http://localhost:3000/login?redirect=/editor');// if everything good, save to request for use in other routes
+        //req.userId = decoded.id;
+        next();
+    });
+});
+
 module.exports = app;
