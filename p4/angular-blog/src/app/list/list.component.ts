@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { BlogService, Post } from '../blog.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -15,15 +15,17 @@ export class ListComponent implements OnInit {
     ) { }
   posts: Post[];
   username: string;
-  selectedPost: Post;
 
   ngOnInit() {
+    this.activatedRoute.params.subscribe(() => this.getPosts());
     this.posts = this.blogService.getPosts(this.blogService.auth_username);
-    console.log("init was called again in list component");
+    //console.log("init was called again in list component");
+    //console.log(this.posts);
   }
 
   getPosts():void{
-    this.posts = this.blogService.getPosts(this.username);
+    this.posts = this.blogService.getPosts(this.blogService.auth_username);
+    console.log("get posts was called in list component");
   }
 
   newPost(): void {

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Post, BlogService } from '../blog.service';
+import { ListComponent } from '../list/list.component';
 
 @Component({
   selector: 'app-edit',
@@ -20,6 +21,7 @@ export class EditComponent implements OnInit {
   constructor(private blogService: BlogService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private listComponent: ListComponent
     ) {
     
    }
@@ -30,13 +32,15 @@ export class EditComponent implements OnInit {
 
   getPost(): void {
 		let postid = this.activatedRoute.snapshot.paramMap.get('id');
-		this.post = this.blogService.getPost(this.blogService.auth_username, Number(postid));
+    this.post = this.blogService.getPost(this.blogService.auth_username, Number(postid));
+    console.log("get post in edit was called again");
   }
   
   delete(): void {
 		this.blogService.deletePost(this.blogService.auth_username, this.post.postid);
-    this.router.navigate(['/']);
-    this.activatedRoute.params.subscribe(() => this.blogService.getPosts(this.blogService.auth_username));
+    //this.router.navigate(['/']);
+    //this.listComponent.ngOnInit();
+
   }
   
   @HostListener('window:beforeunload')
@@ -45,6 +49,6 @@ export class EditComponent implements OnInit {
   }
 
   preview():void{
-
+    this.router.navigateByUrl('/preview/' + this.post.postid);
   }
 }

@@ -1,5 +1,7 @@
 import {FAKEPOSTS} from "./fake-posts";
 import { Injectable } from '@angular/core';
+import { routerNgProbeToken } from "@angular/router/src/router_module";
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Injectable({
@@ -10,9 +12,15 @@ export class BlogService {
   public auth_username: string;
   private nextID: number;
   private api: string = "http://localhost:3000/api/";
+  private updateboo: boolean;
 
-  constructor() {
-    this.parseJWT(document.cookie);
+  constructor(private router: Router,
+      private activatedRoute: ActivatedRoute) {
+      if(document.cookie != null && document.cookie.search("jwt")!= -1){
+        this.parseJWT(document.cookie);
+      this.updateboo = true;
+      }
+    
     this.fetchPosts(this.auth_username);
     console.log(this.auth_username);
    }
@@ -22,6 +30,9 @@ export class BlogService {
     let classThis = this;
     httpReq.onreadystatechange = function() {
       if (httpReq.readyState == XMLHttpRequest.DONE) {
+        if(httpReq.status == 401){
+          window.location.href = "http://localhost:3000/login?redirect=/editor/";
+        }
         console.log("REACHED");
         let res = JSON.parse(httpReq.responseText);
         console.log(res);
@@ -68,8 +79,8 @@ export class BlogService {
       postid: this.nextID,
       created: new Date(),
       modified: new Date(),
-      title: "",
-      body: ""
+      title: " ",
+      body: " "
     };
     this.posts.push(newPost);
     let httpReq = new XMLHttpRequest();
@@ -78,6 +89,9 @@ export class BlogService {
         console.log("good job making new post woot");
       }
       else if (httpReq.readyState == XMLHttpRequest.DONE) {
+        if(httpReq.status == 401){
+          window.location.href = "http://localhost:3000/login?redirect=/editor/";
+        }
         window.alert("error creating new post rip lmao");
         window.location.href = "http://localhost:3000/edit/";
       }
@@ -94,7 +108,11 @@ export class BlogService {
   }
 
   updatePost(username: string, post: Post): void {
+    if(!this.updateboo){
+      return;
+    }
     let index = this.postToIndex(post.postid);
+    let classThis = this;
     if (index != -1) {
       this.posts[index].title = post.title;
       this.posts[index].body = post.body;
@@ -103,10 +121,17 @@ export class BlogService {
       httpReq.onreadystatechange = function() {
         if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 200) {
           console.log("successful update wooo");
+          classThis.updateboo = true;
         }
-        else if (httpReq.readyState == XMLHttpRequest.DONE) {
+        else if(httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 401){
+          window.location.href = "http://localhost:3000/login?redirect=/editor/";
+          classThis.updateboo= false;
+        }
+        else if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status != 0 && httpReq.status != 200) {
           window.alert("error updating post");
+          console.log("dumb", httpReq.status);
           window.location.href = "http://localhost:3000/edit/" + post.postid;
+          classThis.updateboo = true;
         }
       }
       httpReq.open("PUT", this.api + username + "/" + post.postid.toString());
@@ -117,25 +142,30 @@ export class BlogService {
 
   deletePost(username: string, postid: number): void {
     let index = this.postToIndex(postid);
+    let classThis = this;
     if (index != -1) {
       let httpReq = new XMLHttpRequest();
       httpReq.onreadystatechange = function() {
         if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 204) {
           console.log("successful delete guud job");
+          classThis.router.navigate(['/']);
         }
-        else if (httpReq.readyState == XMLHttpRequest.DONE) {
+        else if (httpReq.readyState == XMLHttpRequest.DONE && httpReq.status == 401) {
           window.alert("error deleting post");
-          window.location.href = "http://localhost:3000/";
+          window.location.href = "http://localhost:3000/login?redirect=/editor/";
+          classThis.router.navigate(['/']);
+        }
+        else if(httpReq.readyState == XMLHttpRequest.DONE && httpReq.status != 204){
+          window.alert("error deleting post");
+          classThis.router.navigate(['/']);
         }
       };
       
-      this.posts = this.posts.filter(function(post) {
-        return post.postid !== postid;
-      });
-      //this.posts.splice(index, 1);
-      console.log(this.posts);
+      this.posts.splice(index, 1);
+      console.log("HERE ARE THE POSTS IN BS delete" , this.posts);
       httpReq.open('DELETE', this.api + username + "/" + postid.toString(), true);
       httpReq.send();
+      //this.router.navigate(['/']);
     }
   }
 

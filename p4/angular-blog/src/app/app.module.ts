@@ -7,19 +7,21 @@ import { BlogService } from './blog.service';
 import { ListComponent } from './list/list.component';
 import { EditComponent } from './edit/edit.component';
 import { AppRoutingModule } from './app-routing.module';
+import { PreviewComponent } from './preview/preview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListComponent,
-    EditComponent
+    EditComponent,
+    PreviewComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
   ],
-  providers: [BlogService],
+  providers: [BlogService, ListComponent], //WRONG
   bootstrap: [AppComponent]
 })
 export class AppModule { }
