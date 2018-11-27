@@ -18,9 +18,8 @@ export class BlogService {
       private activatedRoute: ActivatedRoute) {
       if(document.cookie != null && document.cookie.search("jwt")!= -1){
         this.parseJWT(document.cookie);
-      this.updateboo = true;
       }
-    
+    this.updateboo = true;
     this.fetchPosts(this.auth_username);
     console.log(this.auth_username);
    }
@@ -134,7 +133,7 @@ export class BlogService {
           classThis.updateboo = true;
         }
       }
-      httpReq.open("PUT", this.api + username + "/" + post.postid.toString());
+      httpReq.open("PUT", this.api + username + "/" + post.postid.toString(), true);
       httpReq.setRequestHeader("Content-type", "application/json");
       httpReq.send(JSON.stringify(this.posts[index]));
     }
