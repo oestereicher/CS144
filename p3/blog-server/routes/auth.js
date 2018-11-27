@@ -71,7 +71,7 @@ router.post('/login', (req, res, next) => {
                            //good good, gotta check the redirect stuff
                            console.log("yay, good password!!!1");
                            token = jwt.sign({
-                               "exp": Math.floor(Date.now() / 1000) + (45), //CHANGED
+                               "exp": Math.floor(Date.now() / 1000) + (2 * 60 * 60), //CHANGED
                                "usr": user
                            }, config.secret);
                        }
@@ -97,7 +97,7 @@ router.post('/login', (req, res, next) => {
 
 //testy testy test test test testststststs
 router.get('/api/:username', verifyToken, function(req, res, next) {
-    //console.log("in the test");
+    console.log("in the test");
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
         console.log("Connected correctly to server in test.js");
@@ -143,7 +143,7 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
             if(result){
               return res.status(200).json(result);
             }
-            else 
+            else
             {
               return res.status(404).send("no such post");
             }

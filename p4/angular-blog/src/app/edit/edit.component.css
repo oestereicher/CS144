@@ -1,0 +1,9 @@
+#delete:after {
+  content: 'ⓧ';
+}
+#preview:after {
+  content:'👁';
+}
+#save:after {
+  content:'💾';
+}

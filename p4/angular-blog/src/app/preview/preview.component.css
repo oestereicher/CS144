@@ -1,0 +1,17 @@
+#body {
+  color: white;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 16pt;
+  padding: 5px .25em 5px;
+  resize: none;
+  background-color: rgba(135, 138, 142, 0.5);
+  border: 2px solid #c12811;
+
+  height: 15em;
+  width: 70%;
+  background-color: rgba(135, 138, 142, 0.5);
+  float: left;
+}
+#title {
+  -webkit-text-stroke: 1px grey;
+}
