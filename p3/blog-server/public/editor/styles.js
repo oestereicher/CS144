@@ -539,7 +539,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/cs144/shared/cs144/p4/angular-blog/src/styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! /home/cs144/shared/gitrepos/CS144/p4/angular-blog/src/styles.css */"./src/styles.css");
 
 
 /***/ })
