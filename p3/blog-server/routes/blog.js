@@ -8,23 +8,30 @@ let dbName = 'BlogServer';
 let commonmark = require('commonmark');
 var reader = new commonmark.Parser();
 var writer = new commonmark.HtmlRenderer();
+let mongodb;
 
 let posts;
+MongoClient.connect(url, function(err, client) {
+        assert.equal(null, err);
+        mongodb=client.db(dbName);
+        console.log("hey we got that mongo");
+    }
+);
 
 app.set('view engine', 'ejs');
 app.set('views', '.');
 router.get('/:username', (req, res) => {
 	console.log(req.params.username);
 	console.log(req.query.start);
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        console.log("Connected correctly to server in blog.js");
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     console.log("Connected correctly to server in blog.js");
+    //     let db = client.db(dbName);
         let query = {'username': req.params.username};
-        db.collection("Users").find(query).toArray(function (error, resultt){
+        mongodb.collection("Users").find(query).toArray(function (error, resultt){
             if (error) return res.status(404).send("There was a problem finding the user.");
             if (resultt.length < 1) return res.status(404).send("No user found.");
-            db.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
+            mongodb.collection("Posts").find(query).sort({postid: 1}).toArray(function(err, result) {
                 if (err) throw err;
                 console.log(result);
                 posts = result;
@@ -49,10 +56,10 @@ router.get('/:username', (req, res) => {
                     renderObj.morePosts = true;
                 }
                 res.render('blog', renderObj);
-                client.close();
+                // client.close();
             });
         });
-    });
+    // });
 
 });
 
@@ -60,14 +67,14 @@ router.get('/:username', (req, res) => {
 router.get('/:username/:postid', (req, res) => {
 	console.log(req.params.username);
 	console.log(req.query.start);
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        console.log("Connected correctly to server in blog.js");
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     console.log("Connected correctly to server in blog.js");
+    //     let db = client.db(dbName);
         //let query = { $and:[{'username': req.params.username}, {'postid':req.params.postid}] };
         let query = {'username': req.params.username, 'postid':parseInt(req.params.postid)};
         console.log("after query");
-        db.collection("Posts").find(query).toArray(function(err, result) {
+        mongodb.collection("Posts").find(query).toArray(function(err, result) {
             console.log("reached pre-error");
             if(result.length == 0)
                 res.status(404).send("Post not found");
@@ -83,9 +90,9 @@ router.get('/:username/:postid', (req, res) => {
             renderObj.posts = [(writer.render(reader.parse(posts[0].body)))];
 
             res.render('blog', renderObj);
-            client.close();
+            // client.close();
         });
-    });
+    // });
 
 });
 
