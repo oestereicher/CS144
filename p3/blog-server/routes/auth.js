@@ -11,6 +11,7 @@ let token;
 var verifyToken = require('./verifyToken')
 let cookieParser = require('cookie-parser');
 var config = require('../config')
+var mongodb;
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -18,6 +19,11 @@ const saltRounds = 10;
 app.set('view engine', 'ejs');
 app.set('views', '.');
 app.use(cookieParser());
+MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+    mongodb=client.db(dbName);
+    }
+);
 
 router.get('/login', (req, res) => {
     let redirect = "";
@@ -46,12 +52,12 @@ router.post('/login', (req, res, next) => {
    }
    else {
        let hashword = new Array();
-       MongoClient.connect(url, function(err, client) {
-           assert.equal(null, err);
-           console.log("Connected correctly to server in auth.js");
-           let db = client.db(dbName);
+       // MongoClient.connect(url, function(err, client) {
+       //     assert.equal(null, err);
+       //     console.log("Connected correctly to server in auth.js");
+       //     let db = client.db(dbName);
            let query = {'username': user};
-           db.collection("Users").find(query, {
+           mongodb.collection("Users").find(query, {
                projection: {_id: 0, username: 0}
            }).toArray(function(err, result) {
                if (err) throw err;
@@ -86,9 +92,9 @@ router.post('/login', (req, res, next) => {
                        }
                    })
                }
-               client.close();
+               // client.close();
            });
-       });
+       // });
        console.log("terrible terrible" + hashword);
 
        //res.render('login', {});
@@ -98,18 +104,18 @@ router.post('/login', (req, res, next) => {
 //testy testy test test test testststststs
 router.get('/api/:username', verifyToken, function(req, res, next) {
     console.log("in the test");
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        console.log("Connected correctly to server in test.js");
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     console.log("Connected correctly to server in test.js");
+    //     let db = client.db(dbName);
         let query = {'username': req.params.username};
-        db.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
+        mongodb.collection("Users").find(query, {projection: {_id: 0, password: 0}}).toArray(function (err, result) {
             if (err) return res.status(400).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No user found.");
             let renderObj = new Object();
             renderObj.user = req.params.username;
             renderObj.posts = new Array();
-            db.collection("Posts").find(query).toArray(function (error, resultt) {
+            mongodb.collection("Posts").find(query).toArray(function (error, resultt) {
                 if (error) return res.status(404).send("problem finding the posts");
                 if (resultt) {
                     renderObj.posts = resultt;
@@ -121,19 +127,19 @@ router.get('/api/:username', verifyToken, function(req, res, next) {
                 //res.status(200).render('api', renderObj);
                 res.status(200).json(jsonObj);
                 //res.render('blog', renderObj);
-                client.close();
+                // client.close();
             });
         });
-    });
+    // });
 });
 
 router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        console.log("Connected correctly to server in test.js");
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     console.log("Connected correctly to server in test.js");
+    //     let db = client.db(dbName);
         let query = {'username': req.params.username, 'postid': parseInt(req.params.postid)};
-        db.collection("Posts").findOne(query, {projection: {_id: 0, password: 0}},function (err, result) {
+        mongodb.collection("Posts").findOne(query, {projection: {_id: 0, password: 0}},function (err, result) {
             if (err) return res.status(404).send("There was a problem finding the user.");
             if (result.length < 1) return res.status(404).send("No post found.");
             let renderObj = new Object(); //I dont know if this renderObj ends up being used
@@ -147,21 +153,21 @@ router.get('/api/:username/:postid', verifyToken, function (req, res, next) {
             {
               return res.status(404).send("no such post");
             }
-            client.close();
+            // client.close();
         });
-    });
+    // });
 });
 
 router.delete('/api/:username/:postid', verifyToken, function(req, res, next) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     let db = client.db(dbName);
         console.log("info i want");
         console.log(req.params.username);
         console.log(req.params.postid);
         let postid = parseInt(req.params.postid); //technically this will allow things like 34xxyy... fix this
         let query = {'username': req.params.username, 'postid': postid};
-        db.collection("Posts").deleteOne(query, function (err, obj) {
+        mongodb.collection("Posts").deleteOne(query, function (err, obj) {
             if (err) return res.status(400).send("bad bad bad it aint there (?)"); //might be wrong error
             if (obj.result.n == 0) {
                 return res.status(400).send("pretty sure this means the post wasnt there");
@@ -171,16 +177,16 @@ router.delete('/api/:username/:postid', verifyToken, function(req, res, next) {
             console.log(obj.result);
             client.close();
         });
-    });
+    // });
 });
 
 router.post('/api/:username/:postid', verifyToken, function(req, res, next) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     let db = client.db(dbName);
         let postid = parseInt(req.params.postid); //technically this will allow things like 34xxyy... fix this
         let query = {'username': req.params.username, 'postid': postid};
-        db.collection("Posts").find(query).toArray(function (err, result) {
+        mongodb.collection("Posts").find(query).toArray(function (err, result) {
             console.log(result);
             if (err) return res.status(400).send("idk what this issue is");
             if (result.length > 0) {
@@ -195,23 +201,23 @@ router.post('/api/:username/:postid', verifyToken, function(req, res, next) {
                 query.created = Math.floor(Date.now());
                 query.modified = query.created;
                 console.log(req.body);
-                db.collection("Posts").insertOne(query, function (err, obj) {
+                mongodb.collection("Posts").insertOne(query, function (err, obj) {
                    if (err) return res.status(400).send("not sure if correct error");
                    res.status(201).send("created gooooooood thing");
                 });
             }
-            client.close();
+            // client.close();
         });
-    });
+    // });
 });
 
 router.put('/api/:username/:postid', verifyToken, function (req, res, next) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        let db = client.db(dbName);
+    // MongoClient.connect(url, function(err, client) {
+    //     assert.equal(null, err);
+    //     let db = client.db(dbName);
         let postid = parseInt(req.params.postid); //technically this will allow things like 34xxyy... fix this
         let query = {'username': req.params.username, 'postid': postid};
-        db.collection("Posts").find(query).toArray(function (err, result) {
+        mongodb.collection("Posts").find(query).toArray(function (err, result) {
             console.log(result);
             if (err) return res.status(400).send("error???");
             if (result.length == 0) {
@@ -224,14 +230,14 @@ router.put('/api/:username/:postid', verifyToken, function (req, res, next) {
                 //query.title = req.body.title;
                 update = {$set: {'title': req.body.title, 'body': req.body.body, 'modified': Math.floor(Date.now())}};
                 console.log(req.body);
-                db.collection("Posts").updateOne(query, update, function (err, obj) {
+                mongodb.collection("Posts").updateOne(query, update, function (err, obj) {
                     if (err) return res.status(400).send("not sure if correct error");
                     res.status(200).send("updated suchhhh a gooooooood thing");
                 });
             }
-            client.close();
+            // client.close();
         });
-    });
+    // });
 });
 
 module.exports = router;
