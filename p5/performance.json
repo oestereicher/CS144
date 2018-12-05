@@ -28,11 +28,11 @@
   },
   { "Id": 5,
     "Test": "write_node",
-    "Number Of Users": 0,
-    "Total Number Of Req": 0,
-    "Total RPS": 0,
+    "Number Of Users": 100,
+    "Total Number Of Req": 1825,
+    "Total RPS": 60.8,
     "Request Distribution": [
-      {"name": "PUT /api/cs144", "98%": 0}
+      {"name": "PUT /api/cs144", "98%": 360}
     ]
   }
 ]
