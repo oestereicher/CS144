@@ -1,0 +1,6 @@
+val lines = sc.textFile("input.txt") 
+val words = lines.flatMap(line => line.split(" "))
+val word1s = words.map(word => (word, 1))
+val wordCounts = word1s.reduceByKey((a,b) => a+b)
+wordCounts.saveAsTextFile("output")
+System.exit(0)

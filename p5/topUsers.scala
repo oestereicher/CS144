@@ -1,0 +1,8 @@
+val edges = sc.textFile("twitter.edges")
+val lines = edges.map( line => line.split(": ")(1))
+val users = lines.flatMap(line => line.split(","))
+val user1s = users.map(user => (user, 1))
+val count_users = user1s.reduceByKey((a, b) => a + b)
+val mostFollowers = count_users.filter(count_users => count_users._2 > 1000)
+mostFollowers.saveAsTextFile("output")
+System.exit(0)
