@@ -1,0 +1,25 @@
+[2018-12-03 00:35:49,171] ae763a7ff7d9/INFO/locust.main: Run time limit set to 30 seconds
+[2018-12-03 00:35:49,172] ae763a7ff7d9/INFO/locust.main: Starting Locust 0.9.0
+[2018-12-03 00:35:49,173] ae763a7ff7d9/INFO/locust.runners: Hatching and swarming 200 clients at the rate 100 clients/s...
+[2018-12-03 00:35:52,158] ae763a7ff7d9/INFO/locust.runners: All locusts hatched: MyLocust: 200
+[2018-12-03 00:35:52,161] ae763a7ff7d9/INFO/locust.runners: Resetting stats
+
+[2018-12-03 00:36:19,139] ae763a7ff7d9/INFO/locust.main: Time limit reached. Stopping Locust.
+[2018-12-03 00:36:19,141] ae763a7ff7d9/INFO/locust.main: Shutting down (exit code 0), bye.
+[2018-12-03 00:36:19,141] ae763a7ff7d9/INFO/locust.main: Cleaning up runner...
+[2018-12-03 00:36:19,184] ae763a7ff7d9/INFO/locust.main: Running teardowns...
+ Name                                                          # reqs      # fails     Avg     Min     Max  |  Median   req/s
+--------------------------------------------------------------------------------------------------------------------------------------------
+ GET /editor/post?action=open                                    4550     0(0.00%)      48       5     409  |      36  171.10
+ POST /editor/post?action=save                                    501     0(0.00%)     237      30     646  |     200   16.90
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Total                                                           5051     0(0.00%)                                     188.00
+
+Percentage of the requests completed within given times
+ Name                                                           # reqs    50%    66%    75%    80%    90%    95%    98%    99%   100%
+--------------------------------------------------------------------------------------------------------------------------------------------
+ GET /editor/post?action=open                                     4550     36     51     61     70     98    120    160    200    410
+ POST /editor/post?action=save                                     501    200    270    330    370    450    510    580    600    650
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Total                                                            5051     41     59     75     88    140    230    370    450    650
+
